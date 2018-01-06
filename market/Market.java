@@ -21,7 +21,10 @@ public class Market {
 	public synchronized void AddFruit(HashMap<Fruits, Integer> quantity) {
 		
 		for(int i = 0; i < Fruits.values().length; i++) {
-			if(quantity.get(Fruits.values()[i]) + availableQuantity <= capacity) {
+			
+			if(quantity.get(Fruits.values()[i]) == 0)
+				continue;
+			else if(quantity.get(Fruits.values()[i]) + availableQuantity <= capacity) {
 				int num = fruitSlots.get(Fruits.values()[i]) + quantity.get(Fruits.values()[i]);
 				fruitSlots.put(Fruits.values()[i], num);
 				quantity.put(Fruits.values()[i], 0);
@@ -29,7 +32,12 @@ public class Market {
 			}
 			else if(capacity - availableQuantity < quantity.get(Fruits.values()[i])) {
 				int num = fruitSlots.get(Fruits.values()[i]) + (capacity - availableQuantity);
+				fruitSlots.put(Fruits.values()[i], num);
+				int val = quantity.get(Fruits.values()[i]);
+				quantity.put(Fruits.values()[i], val - num);
+				availableQuantity = capacity;
 			}
+			
 		}
 		
 	}
