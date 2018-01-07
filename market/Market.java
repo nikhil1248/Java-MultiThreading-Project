@@ -1,6 +1,10 @@
 package market;
 
 import java.util.HashMap;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Market {
 
@@ -65,6 +69,31 @@ public class Market {
 
 	public static void main(String[] args) throws InterruptedException {
 		Market market = new Market(100);
+		int nThreads = 10;
+		ExecutorService pool = Executors.newFixedThreadPool(nThreads);
+		
+		int fCount = 0, cCount = 0;
+		
+		long time = System.currentTimeMillis();
+		long now = System.currentTimeMillis();
+		while((now - time) <= 1000) {
+			Random numGen = new Random();
+			int val = (int)(Math.random() * 100);
+			
+			if(val % 2 == 0) {
+				fCount++;
+				pool.execute(new FarmerThread(market, numGen.nextInt(20), numGen.nextInt(20), numGen.nextInt(20), numGen.nextInt(20), fCount));
+			}
+			else {
+				cCount++;
+				pool.execute(new ConsumerThread(market, numGen.nextInt(20), numGen.nextInt(20), numGen.nextInt(20), numGen.nextInt(20), cCount));
+			}
+			
+			TimeUnit.MILLISECONDS.sleep(5);
+			now = System.currentTimeMillis();
+		}
+		
+		pool.shutdown();
 		
 	}
 

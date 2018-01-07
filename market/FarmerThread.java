@@ -3,16 +3,17 @@ package market;
 import java.util.HashMap;
 
 public class FarmerThread extends Thread {
-
+	
 	public Market market;
 
-	public static int count = 0;
+	public int count;
 
 	public HashMap<Fruits, Integer> quantity;
 
 	public int totalQuantity;
 
-	public FarmerThread(Market market, int apples, int oranges, int grapes, int watermelons) {
+	public FarmerThread(Market market, int apples, int oranges, int grapes, int watermelons, int count) {
+		this.count = count;
 		this.market = market;
 		quantity = new HashMap<>();
 		quantity.put(Fruits.APPLE, apples);
@@ -23,16 +24,16 @@ public class FarmerThread extends Thread {
 	}
 
 	public void run() {
-
+		System.out.println("A Farmer " + count + " entered the market");
 		try {
 			while (totalQuantity != 0) {
 				synchronized(market){
 					if (market.availableQuantity == market.capacity) {
-						System.out.println("Waiting for selling the fruits....");
+						System.out.println("Farmer " + count + " waiting for selling the fruits....");
 						market.wait();
 					} else {
 						market.addFruit(quantity);
-						System.out.println("Sold some fruits");
+						System.out.println("Farmer "  + count + " sold some fruits");
 						market.notifyAll();
 					}
 					updateQuantity();

@@ -5,12 +5,15 @@ import java.util.HashMap;
 public class ConsumerThread extends Thread {
 
 	public Market market;
+	
+	public int count;
 
 	public HashMap<Fruits, Integer> quantity;
 	public int totalQuantity;
 
-	public ConsumerThread(Market market, int apples, int oranges, int grapes, int watermelons) {
+	public ConsumerThread(Market market, int apples, int oranges, int grapes, int watermelons, int count) {
 		this.market = market;
+		this.count = count;
 		quantity = new HashMap<>();
 		quantity.put(Fruits.APPLE, apples);
 		quantity.put(Fruits.ORANGE, oranges);
@@ -20,17 +23,18 @@ public class ConsumerThread extends Thread {
 	}
 
 	public void run() {
+		System.out.println("A Consumer " + count + " entered the market");
 		try {
 			while (totalQuantity != 0) {
 				synchronized (market) {
 					if (market.availableQuantity == 0) {
-						System.out.println("Waiting for buying fruits");
+						System.out.println("Consumer " + count + " waiting for buying fruits");
 						market.wait();
 					}
 					else {
 						market.sellFruit(quantity);
 						market.notifyAll();
-						System.out.println("Bought fruits.");
+						System.out.println("Consumer " + count + " bought fruits.");
 					}
 					updateQuantity();
 				}
