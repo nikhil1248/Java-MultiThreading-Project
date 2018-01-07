@@ -23,7 +23,7 @@ public class ConsumerThread extends Thread {
 	}
 
 	public void run() {
-		System.out.println("A Consumer " + count + " entered the market");
+		System.out.println("\nConsumer " + count + " entered the market");
 		try {
 			while (totalQuantity != 0) {
 				synchronized (market) {
@@ -32,9 +32,8 @@ public class ConsumerThread extends Thread {
 						market.wait();
 					}
 					else {
-						market.sellFruit(quantity);
+						market.sellFruit(quantity, count);
 						market.notifyAll();
-						System.out.println("Consumer " + count + " bought fruits.");
 					}
 					updateQuantity();
 				}
@@ -42,7 +41,7 @@ public class ConsumerThread extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("Consumer " + count + " exited the market\n");
 	}
 
 	public void updateQuantity() {
