@@ -28,8 +28,8 @@ public class Market {
 			else if (quantity.get(Fruits.values()[i]) + availableQuantity <= capacity) {
 				int num = fruitSlots.get(Fruits.values()[i]) + quantity.get(Fruits.values()[i]);
 				fruitSlots.put(Fruits.values()[i], num);
-				quantity.put(Fruits.values()[i], 0);
 				availableQuantity += quantity.get(Fruits.values()[i]);
+				quantity.put(Fruits.values()[i], 0);
 			} else if (capacity - availableQuantity < quantity.get(Fruits.values()[i])) {
 				int num = fruitSlots.get(Fruits.values()[i]) + (capacity - availableQuantity);
 				fruitSlots.put(Fruits.values()[i], num);
@@ -38,7 +38,6 @@ public class Market {
 				availableQuantity = capacity;
 			}
 		}
-
 	}
 
 	public synchronized void sellFruit(HashMap<Fruits, Integer> quantity) {
@@ -66,13 +65,7 @@ public class Market {
 
 	public static void main(String[] args) throws InterruptedException {
 		Market market = new Market(100);
-		FarmerThread ft = new FarmerThread(market, 10, 10, 10, 10);
-		ConsumerThread ct = new ConsumerThread(market, 20, 4, 2, 5);
-		ft.start();
-		ct.start();
-		ft.join();
-		ct.join();
-		String n = new String();
+		
 	}
 
 }

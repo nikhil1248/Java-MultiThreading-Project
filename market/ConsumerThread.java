@@ -22,16 +22,19 @@ public class ConsumerThread extends Thread {
 	public void run() {
 		try {
 			while (totalQuantity != 0) {
-				if (market.availableQuantity == 0) {
-					System.out.println("Waiting for buying fruits");
-					sleep(1000);
+				synchronized (market) {
+					if (market.availableQuantity == 0) {
+						System.out.println("Waiting for buying fruits");
+						market.wait();
+					}
+					else {
+						market.sellFruit(quantity);
+						market.notifyAll();
+						System.out.println("Bought fruits.");
+					}
+					updateQuantity();
 				}
-				else {
-					market.sellFruit(quantity);
-					notify();
 				}
-				updateQuantity();
-			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -26,13 +26,17 @@ public class FarmerThread extends Thread {
 
 		try {
 			while (totalQuantity != 0) {
-				if (market.availableQuantity == market.capacity) {
-					System.out.println("Waiting for selling the fruits....");
-					sleep(1000);
-				} else {
-					market.addFruit(quantity);
+				synchronized(market){
+					if (market.availableQuantity == market.capacity) {
+						System.out.println("Waiting for selling the fruits....");
+						market.wait();
+					} else {
+						market.addFruit(quantity);
+						System.out.println("Sold some fruits");
+						market.notifyAll();
+					}
+					updateQuantity();
 				}
-				updateQuantity();
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
