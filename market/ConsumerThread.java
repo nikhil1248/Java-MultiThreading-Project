@@ -21,15 +21,24 @@ public class ConsumerThread extends Thread{
 	
 	public void run() {
 		try {
-			while(market.availableQuantity == 0)
-				wait();
-			
-			market.RemoveFruit(quantity);
-			
+			while(totalQuantity != 0) {
+				if(market.availableQuantity == 0)
+					wait();
+				else
+					market.RemoveFruit(quantity);
+				UpdateQuantity();
+			}	
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void UpdateQuantity() {
+		totalQuantity = 0;
+		for(int i = 0; i < Fruits.values().length; i++) {
+			totalQuantity += quantity.get(Fruits.values()[i]);
+		}
 	}
 
 }

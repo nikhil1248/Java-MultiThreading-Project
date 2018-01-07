@@ -21,7 +21,8 @@ public class Market {
 	public synchronized void AddFruit(HashMap<Fruits, Integer> quantity) {
 		
 		for(int i = 0; i < Fruits.values().length; i++) {
-			
+			if(availableQuantity == capacity)
+				break;
 			if(quantity.get(Fruits.values()[i]) == 0)
 				continue;
 			else if(quantity.get(Fruits.values()[i]) + availableQuantity <= capacity) {
@@ -45,7 +46,23 @@ public class Market {
 	public synchronized void RemoveFruit(HashMap<Fruits, Integer> quantity) {
 		
 		for(int i = 0; i < Fruits.values().length; i++) {
-			
+			if(availableQuantity == 0)
+				break;
+			if(quantity.get(Fruits.values()[i]) == 0)
+				continue;
+			else if(fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]) >= 0) {
+				int num = fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]);
+				fruitSlots.put(Fruits.values()[i], num);
+				availableQuantity -= quantity.get(Fruits.values()[i]);
+				quantity.put(Fruits.values()[i], 0);
+			}
+			else if(fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]) < 0) {
+				int num = quantity.get(Fruits.values()[i]) - fruitSlots.get(Fruits.values()[i]);
+				fruitSlots.put(Fruits.values()[i], 0);
+				availableQuantity -= num;
+				int val = quantity.get(Fruits.values()[i]) - num;
+				quantity.put(Fruits.values()[i], val);
+			}
 		}
 		
 	}
