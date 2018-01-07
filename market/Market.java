@@ -3,11 +3,11 @@ package market;
 import java.util.HashMap;
 
 public class Market {
-	
+
 	public int capacity;
 	public HashMap<Fruits, Integer> fruitSlots;
 	public int availableQuantity;
-	
+
 	public Market(int capacity) {
 		this.capacity = capacity;
 		fruitSlots = new HashMap<>();
@@ -17,46 +17,43 @@ public class Market {
 		fruitSlots.put(Fruits.WATERMELON, 0);
 		availableQuantity = 0;
 	}
-	
-	public synchronized void AddFruit(HashMap<Fruits, Integer> quantity) {
-		
-		for(int i = 0; i < Fruits.values().length; i++) {
-			if(availableQuantity == capacity)
+
+	public synchronized void addFruit(HashMap<Fruits, Integer> quantity) {
+
+		for (int i = 0; i < Fruits.values().length; i++) {
+			if (availableQuantity == capacity)
 				break;
-			if(quantity.get(Fruits.values()[i]) == 0)
+			if (quantity.get(Fruits.values()[i]) == 0)
 				continue;
-			else if(quantity.get(Fruits.values()[i]) + availableQuantity <= capacity) {
+			else if (quantity.get(Fruits.values()[i]) + availableQuantity <= capacity) {
 				int num = fruitSlots.get(Fruits.values()[i]) + quantity.get(Fruits.values()[i]);
 				fruitSlots.put(Fruits.values()[i], num);
 				quantity.put(Fruits.values()[i], 0);
 				availableQuantity += quantity.get(Fruits.values()[i]);
-			}
-			else if(capacity - availableQuantity < quantity.get(Fruits.values()[i])) {
+			} else if (capacity - availableQuantity < quantity.get(Fruits.values()[i])) {
 				int num = fruitSlots.get(Fruits.values()[i]) + (capacity - availableQuantity);
 				fruitSlots.put(Fruits.values()[i], num);
 				int val = quantity.get(Fruits.values()[i]);
 				quantity.put(Fruits.values()[i], val - num);
 				availableQuantity = capacity;
 			}
-			
 		}
-		
+
 	}
-	
-	public synchronized void RemoveFruit(HashMap<Fruits, Integer> quantity) {
-		
-		for(int i = 0; i < Fruits.values().length; i++) {
-			if(availableQuantity == 0)
+
+	public synchronized void sellFruit(HashMap<Fruits, Integer> quantity) {
+
+		for (int i = 0; i < Fruits.values().length; i++) {
+			if (availableQuantity == 0)
 				break;
-			if(quantity.get(Fruits.values()[i]) == 0)
+			if (quantity.get(Fruits.values()[i]) == 0)
 				continue;
-			else if(fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]) >= 0) {
+			else if (fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]) >= 0) {
 				int num = fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]);
 				fruitSlots.put(Fruits.values()[i], num);
 				availableQuantity -= quantity.get(Fruits.values()[i]);
 				quantity.put(Fruits.values()[i], 0);
-			}
-			else if(fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]) < 0) {
+			} else if (fruitSlots.get(Fruits.values()[i]) - quantity.get(Fruits.values()[i]) < 0) {
 				int num = quantity.get(Fruits.values()[i]) - fruitSlots.get(Fruits.values()[i]);
 				fruitSlots.put(Fruits.values()[i], 0);
 				availableQuantity -= num;
@@ -64,12 +61,18 @@ public class Market {
 				quantity.put(Fruits.values()[i], val);
 			}
 		}
-		
+
 	}
-	
-	public static void main(String[] args) {
-		Market market = new Market(10);
-		
+
+	public static void main(String[] args) throws InterruptedException {
+		Market market = new Market(100);
+		FarmerThread ft = new FarmerThread(market, 10, 10, 10, 10);
+		ConsumerThread ct = new ConsumerThread(market, 20, 4, 2, 5);
+		ft.start();
+		ct.start();
+		ft.join();
+		ct.join();
+		String n = new String();
 	}
-	
+
 }

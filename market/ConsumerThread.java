@@ -2,13 +2,13 @@ package market;
 
 import java.util.HashMap;
 
-public class ConsumerThread extends Thread{
-	
+public class ConsumerThread extends Thread {
+
 	public Market market;
-	
+
 	public HashMap<Fruits, Integer> quantity;
 	public int totalQuantity;
-	
+
 	public ConsumerThread(Market market, int apples, int oranges, int grapes, int watermelons) {
 		this.market = market;
 		quantity = new HashMap<>();
@@ -18,25 +18,29 @@ public class ConsumerThread extends Thread{
 		quantity.put(Fruits.WATERMELON, watermelons);
 		totalQuantity = apples + oranges + grapes + watermelons;
 	}
-	
+
 	public void run() {
 		try {
-			while(totalQuantity != 0) {
-				if(market.availableQuantity == 0)
-					wait();
-				else
-					market.RemoveFruit(quantity);
-				UpdateQuantity();
-			}	
-		} catch(InterruptedException e) {
+			while (totalQuantity != 0) {
+				if (market.availableQuantity == 0) {
+					System.out.println("Waiting for buying fruits");
+					sleep(1000);
+				}
+				else {
+					market.sellFruit(quantity);
+					notify();
+				}
+				updateQuantity();
+			}
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	public void UpdateQuantity() {
+
+	public void updateQuantity() {
 		totalQuantity = 0;
-		for(int i = 0; i < Fruits.values().length; i++) {
+		for (int i = 0; i < Fruits.values().length; i++) {
 			totalQuantity += quantity.get(Fruits.values()[i]);
 		}
 	}

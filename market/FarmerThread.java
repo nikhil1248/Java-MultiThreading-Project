@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class FarmerThread extends Thread {
 
 	public Market market;
-	
+
 	public static int count = 0;
 
 	public HashMap<Fruits, Integer> quantity;
@@ -25,21 +25,23 @@ public class FarmerThread extends Thread {
 	public void run() {
 
 		try {
-			while(totalQuantity != 0) {
-				if(market.availableQuantity == market.capacity)
-					wait();
-				else 
-					market.AddFruit(quantity);
-				UpdateQuantity();
+			while (totalQuantity != 0) {
+				if (market.availableQuantity == market.capacity) {
+					System.out.println("Waiting for selling the fruits....");
+					sleep(1000);
+				} else {
+					market.addFruit(quantity);
+				}
+				updateQuantity();
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void UpdateQuantity() {
+
+	public void updateQuantity() {
 		totalQuantity = 0;
-		for(int i = 0; i < Fruits.values().length; i++) {
+		for (int i = 0; i < Fruits.values().length; i++) {
 			totalQuantity += quantity.get(Fruits.values()[i]);
 		}
 	}
