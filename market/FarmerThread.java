@@ -3,7 +3,7 @@ package market;
 import java.util.HashMap;
 
 public class FarmerThread extends Thread {
-	
+
 	public Market market;
 
 	public int count;
@@ -27,7 +27,7 @@ public class FarmerThread extends Thread {
 		System.out.println("Farmer " + count + " entered the market");
 		try {
 			while (totalQuantity != 0) {
-				synchronized(market){
+				synchronized (market) {
 					if (market.availableQuantity == market.capacity) {
 						System.out.println("Farmer " + count + " waiting for selling the fruits....");
 						market.wait();
@@ -41,7 +41,7 @@ public class FarmerThread extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println("Farmer " + count + " exited the market");
 	}
 

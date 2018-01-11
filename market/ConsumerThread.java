@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class ConsumerThread extends Thread {
 
 	public Market market;
-	
+
 	public int count;
 
 	public HashMap<Fruits, Integer> quantity;
@@ -30,14 +30,13 @@ public class ConsumerThread extends Thread {
 					if (market.availableQuantity == 0) {
 						System.out.println("Consumer " + count + " waiting for buying fruits");
 						market.wait();
-					}
-					else {
+					} else {
 						market.sellFruit(quantity, count);
 						market.notifyAll();
 					}
 					updateQuantity();
 				}
-				}
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
