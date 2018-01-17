@@ -63,6 +63,11 @@ public class Market {
 			}
 		}
 	}
+	
+	public static int getRandomNum() {
+		int val = (int)(Math.random() * 100 * 2.5);
+		return val;
+	}
 
 	public static void main(String[] args) throws InterruptedException {
 		Market market = new Market(100);
@@ -78,9 +83,9 @@ public class Market {
 
 		while ((now - time) <= 1000) {
 			Random numGen = new Random();
-			int val = (int) (Math.random() * 100);
+			int val = getRandomNum();
 
-			if (val % 2 == 0) {
+			if (val % 3 == 0) {
 				fCount++;
 				pool.execute(new FarmerThread(market, numGen.nextInt(20), numGen.nextInt(20), numGen.nextInt(20), numGen.nextInt(20), fCount));
 			} else {
@@ -94,6 +99,22 @@ public class Market {
 
 		pool.shutdown();
 
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public int getAvailableQuantity() {
+		return availableQuantity;
+	}
+
+	public void setAvailableQuantity(int availableQuantity) {
+		this.availableQuantity = availableQuantity;
 	}
 
 }

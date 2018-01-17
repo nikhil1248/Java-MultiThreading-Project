@@ -51,5 +51,7 @@ public class FarmerThread extends Thread {
 			totalQuantity += quantity.get(Fruits.values()[i]);
 		}
 	}
+	
+	
 
 }

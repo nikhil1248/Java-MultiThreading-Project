@@ -1,5 +1,6 @@
 package market;
 
+import java.lang.Thread.State;
 import java.util.HashMap;
 
 public class ConsumerThread extends Thread {
@@ -48,6 +49,10 @@ public class ConsumerThread extends Thread {
 		for (int i = 0; i < Fruits.values().length; i++) {
 			totalQuantity += quantity.get(Fruits.values()[i]);
 		}
+	}
+	
+	public State getThreadState() {
+		return this.getState();
 	}
 
 }
